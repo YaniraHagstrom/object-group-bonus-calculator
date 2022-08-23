@@ -39,4 +39,46 @@ const employees = [
 // This is not a race. Everyone on your team should understand what is happening.
 // Ask questions when you don't.
 
-console.log( employees );
+// console.log( employees );
+
+$('#bossButton').click( ()=> {
+for (let employee of employees) {
+  let newEmpData = newEmployeeData(employee);
+  $('#empList').append(`<li> Name: ${newEmpData.name}, Bonus Percentage: ${newEmpData.bonusPercentage}, Total Bonus: ${newEmpData.totalBonus}, Total Compensation: ${newEmpData.totalCompensation} </li>`)
+}
+});
+
+// Big Function Here!!!!
+function newEmployeeData (empObject) {
+  let bonusPercentage = calculateBonusPercentage(empObject);
+  let bonus = empObject.annualSalary * bonusPercentage;
+  let newEmpData = {
+    name: empObject.name,
+    bonusPercentage: bonusPercentage,
+    totalBonus: bonus,
+    totalCompensation: Number(empObject.annualSalary) + bonus,
+  };
+  console.log(newEmpData);
+  return newEmpData;
+}
+
+
+// Calculate bonus function here!!!
+function calculateBonusPercentage(empObject) {
+  let bonusCalculation = {
+    1 : 0, 
+    2 : 0,
+    3 : .04,
+    4 : .06,
+    5 : .1
+  };
+  let basePercent = bonusCalculation[empObject["reviewRating"]];
+  if (empObject.employeeNumber.length === 4) {
+    basePercent += .05;
+  } if (Number(empObject.annualSalary) > 65000 && basePercent > .01) {
+    basePercent -= .01;
+  } if (basePercent > .13) {
+    basePercent = .13;
+  }
+  return Number(basePercent.toFixed(2));
+}
